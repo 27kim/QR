@@ -1,10 +1,10 @@
-package com.d27.qr.view
+package com.d27.qr.view.splash
 
 import android.animation.Animator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.d27.qr.R
+import com.d27.qr.MLKitActivity
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
@@ -21,7 +21,7 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 override fun onAnimationEnd(p0: Animator?) {
-                    Toast.makeText(applicationContext, "끝", Toast.LENGTH_SHORT).show()
+                    startActivity(MLKitActivity.start(context))
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {
