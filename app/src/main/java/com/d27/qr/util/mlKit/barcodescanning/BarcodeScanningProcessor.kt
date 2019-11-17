@@ -1,16 +1,17 @@
-package com.google.firebase.samples.apps.mlkit.kotlin.barcodescanning
+package com.d27.qr.util.mlKit.barcodescanning
 
 import android.graphics.Bitmap
 import android.util.Log
-import com.d27.qr.util.MLKit.CameraImageGraphic
-import com.d27.qr.util.MLKit.FrameMetadata
-import com.d27.qr.util.MLKit.GraphicOverlay
-import com.d27.qr.util.MLKit.VisionProcessorBase
+import com.d27.qr.util.mlKit.CameraImageGraphic
+import com.d27.qr.util.mlKit.FrameMetadata
+import com.d27.qr.util.mlKit.GraphicOverlay
+import com.d27.qr.util.mlKit.VisionProcessorBase
 import com.google.android.gms.tasks.Task
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcodeDetector
 import com.google.firebase.ml.vision.common.FirebaseVisionImage
+import com.google.firebase.samples.apps.mlkit.kotlin.barcodescanning.BarcodeGraphic
 import java.io.IOException
 
 /** Barcode Detector Demo.  */

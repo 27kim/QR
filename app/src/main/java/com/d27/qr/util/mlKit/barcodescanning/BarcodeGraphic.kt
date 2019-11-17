@@ -4,7 +4,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.RectF
-import com.d27.qr.util.MLKit.GraphicOverlay
+import com.d27.qr.util.mlKit.GraphicOverlay
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 
 class BarcodeGraphic(overlay: GraphicOverlay, private val barcode: FirebaseVisionBarcode) :

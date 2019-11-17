@@ -3,8 +3,10 @@ package com.d27.qr.view.splash
 import android.animation.Animator
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import com.d27.qr.CameraXActivity
 import com.d27.qr.R
 import com.d27.qr.MLKitActivity
+import com.d27.qr.ZXingActivity
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
@@ -21,7 +23,6 @@ class SplashActivity : AppCompatActivity() {
                 }
 
                 override fun onAnimationEnd(p0: Animator?) {
-                    startActivity(MLKitActivity.start(context))
                 }
 
                 override fun onAnimationCancel(p0: Animator?) {
@@ -30,6 +31,13 @@ class SplashActivity : AppCompatActivity() {
                 override fun onAnimationStart(p0: Animator?) {
                 }
             })
+        }
+
+        btn1.setOnClickListener {
+            startActivity(CameraXActivity.start(applicationContext))
+        }
+        btn2.setOnClickListener {
+            startActivity(MLKitActivity.start(applicationContext))
         }
     }
 }

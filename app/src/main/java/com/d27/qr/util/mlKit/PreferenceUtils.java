@@ -1,4 +1,4 @@
-package com.d27.qr.util.MLKit;
+package com.d27.qr.util.mlKit;
 
 import android.content.Context;
 import android.content.SharedPreferences;
@@ -9,7 +9,7 @@ import androidx.annotation.StringRes;
 import androidx.core.util.Preconditions;
 
 import com.d27.qr.R;
-import com.d27.qr.util.MLKit.CameraSource.SizePair;
+import com.d27.qr.util.mlKit.CameraSource.SizePair;
 import com.google.android.gms.common.images.Size;
 import com.google.firebase.ml.vision.face.FirebaseVisionFaceDetectorOptions;
 import com.google.firebase.ml.vision.objects.FirebaseVisionObjectDetectorOptions;

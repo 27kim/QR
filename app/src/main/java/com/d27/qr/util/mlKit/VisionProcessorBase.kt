@@ -1,4 +1,4 @@
-package com.d27.qr.util.MLKit
+package com.d27.qr.util.mlKit
 
 import android.graphics.Bitmap
 import androidx.annotation.GuardedBy

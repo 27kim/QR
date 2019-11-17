@@ -8,10 +8,10 @@ import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
-import com.d27.qr.util.MLKit.CameraSource
-import com.google.firebase.samples.apps.mlkit.kotlin.barcodescanning.BarcodeScanningProcessor
-import kotlinx.android.synthetic.main.activity_live_preview.*
-import kotlinx.android.synthetic.main.activity_live_preview.fireFaceOverlay
+import com.d27.qr.util.mlKit.CameraSource
+import com.d27.qr.util.mlKit.barcodescanning.BarcodeScanningProcessor
+import kotlinx.android.synthetic.main.activity_mlkit.*
+import kotlinx.android.synthetic.main.activity_mlkit.fireFaceOverlay
 import java.io.IOException
 
 class MLKitActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsResultCallback {
@@ -44,7 +44,7 @@ class MLKitActivity : AppCompatActivity(), ActivityCompat.OnRequestPermissionsRe
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_live_preview)
+        setContentView(R.layout.activity_mlkit)
 
         if (firePreview == null) {
             Log.d(TAG, "Preview is null")
