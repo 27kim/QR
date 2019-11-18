@@ -26,6 +26,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         tools:text="결과가 들어옵니다"
+        android:autoLink="web"
         />
 
 

@@ -4,6 +4,7 @@ import android.Manifest
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.net.wifi.WifiConfiguration
 import android.os.Bundle
 import android.util.Log
 import android.util.Rational
@@ -14,7 +15,11 @@ import androidx.camera.core.*
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
+import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import kotlinx.android.synthetic.main.activity_camerax.*
+import android.net.wifi.WifiManager
+import android.view.ViewGroup
+import com.d27.qr.util.LLog
 
 class CameraXActivity : AppCompatActivity() {
     companion object {
@@ -25,6 +30,9 @@ class CameraXActivity : AppCompatActivity() {
         }
     }
 
+    private val WIFICIPHER_NOPASS = "NOPASS"
+    private val WIFICIPHER_WEP = 3
+    private val WIFICIPHER_WPA = 2
     private lateinit var textureView: TextureView
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -55,13 +63,40 @@ class CameraXActivity : AppCompatActivity() {
         val preview = Preview(previewConfig)
 
         preview.setOnPreviewOutputUpdateListener { previewOutput ->
+            val parent = textureView.parent as ViewGroup
+            parent.removeView(textureView)
             textureView.surfaceTexture = previewOutput.surfaceTexture
+            parent.addView(textureView, 0)
         }
 
         val imageAnalysisConfig = ImageAnalysisConfig.Builder().build()
 
         val qrCodeAnalyzer = QrCodeAnalyzer { qrCodes ->
             qrCodes.forEach {
+                it.boundingBox
+                when (it.valueType) {
+                    FirebaseVisionBarcode.TYPE_WIFI -> {
+                        it.let {
+                            val ssid = it.wifi!!.ssid!!
+                            val password = it.wifi!!.password!!
+                            val type = it.wifi!!.encryptionType!!
+
+                            connectToWifi(ssid, password, type = type)
+                        }
+
+                    }
+                    FirebaseVisionBarcode.TYPE_URL -> {
+                        val title = it.url?.title
+                        val url = it.url?.url
+                    }
+                    FirebaseVisionBarcode.TYPE_SMS -> {
+                    }
+                    FirebaseVisionBarcode.TYPE_TEXT -> {
+                    }
+                    else -> {
+                    }
+
+                }
 //                Log.d("MainActivity", "QR Code detected: ${it.rawValue}.")
                 tv_result.text = it.rawValue
             }
@@ -95,6 +130,69 @@ class CameraXActivity : AppCompatActivity() {
             }
         }
     }
+
+
+    fun connectToWifi(ssid: String, password: String, type: Int): WifiConfiguration {
+        val config = WifiConfiguration()
+        config.allowedAuthAlgorithms.clear()
+        config.allowedGroupCiphers.clear()
+        config.allowedKeyManagement.clear()
+        config.allowedPairwiseCiphers.clear()
+        config.allowedProtocols.clear()
+
+        config.SSID = "\"" + ssid + "\""
+
+        if (type == 1) {
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE)
+
+        } else if (type == WIFICIPHER_WEP) {
+            config.hiddenSSID = true
+            config.wepKeys[0] = "\"" + password + "\""
+            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.SHARED)
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40)
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104)
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.NONE)
+            config.wepTxKeyIndex = 0
+        } else if (type == WIFICIPHER_WPA) {
+            config.preSharedKey = "\"" + password + "\""
+            config.hiddenSSID = true
+            config.allowedAuthAlgorithms.set(WifiConfiguration.AuthAlgorithm.OPEN)
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
+            config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
+            config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
+            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP)
+            config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
+            config.allowedProtocols.set(WifiConfiguration.Protocol.WPA)
+            config.status = WifiConfiguration.Status.ENABLED
+        }
+
+        try {
+            val wifiManager =
+                this.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
+            wifiManager.addNetwork(config)
+
+            Log.d("after connecting", config.SSID + " " + config.preSharedKey)
+
+
+            val list = wifiManager.configuredNetworks
+            for (i in list) {
+                if (i.SSID != null && i.SSID == "\"" + ssid + "\"") {
+                    wifiManager.disconnect()
+                    wifiManager.enableNetwork(i.networkId, true)
+                    wifiManager.reconnect()
+                    Log.d("re connecting", i.SSID + " " + config.preSharedKey)
+
+                    break
+                }
+            }
+        } catch (e: Exception) {
+            LLog.e(e.toString())
+        }
+        return config
+    }
+
 
 }
 //

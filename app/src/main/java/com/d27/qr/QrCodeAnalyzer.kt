@@ -25,11 +25,16 @@ class QrCodeAnalyzer(
         val visionImage = FirebaseVisionImage.fromMediaImage(image.image!!, rotation)
 
         detector.detectInImage(visionImage)
-            .addOnSuccessListener { barCodes ->
-                onQrCodesDetected(barCodes)
+            .addOnSuccessListener {
+                onQrCodesDetected(it)
+
             }
             .addOnFailureListener {
                 LLog.e("something went wrong : $it")
+            }
+            .addOnCompleteListener {
+                detector.close()
+//                onQrCodesDetected(it)
             }
     }
 
