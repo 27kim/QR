@@ -28,6 +28,7 @@ class CameraXActivity : AppCompatActivity() {
         fun start(context: Context): Intent {
             return Intent(context, CameraXActivity::class.java)
         }
+        private lateinit var preview: Preview
     }
 
     private val WIFICIPHER_NOPASS = "NOPASS"
@@ -41,16 +42,10 @@ class CameraXActivity : AppCompatActivity() {
 
         textureView = findViewById(R.id.texture_view)
 
-        // Request camera permissions
-        if (isCameraPermissionGranted()) {
-            textureView.post { startCamera() }
-        } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.CAMERA),
-                REQUEST_CAMERA_PERMISSION
-            )
+        btn_restart.setOnClickListener {
+            startCamera()
         }
+
     }
 
     private fun startCamera() {
@@ -60,7 +55,7 @@ class CameraXActivity : AppCompatActivity() {
             .setTargetAspectRatio(Rational(1, 1))
             .build()
 
-        val preview = Preview(previewConfig)
+        preview = Preview(previewConfig)
 
         preview.setOnPreviewOutputUpdateListener { previewOutput ->
             val parent = textureView.parent as ViewGroup
@@ -71,34 +66,37 @@ class CameraXActivity : AppCompatActivity() {
 
         val imageAnalysisConfig = ImageAnalysisConfig.Builder().build()
 
-        val qrCodeAnalyzer = QrCodeAnalyzer { qrCodes ->
+        val qrCodeAnalyzer = QrCodeAnalyzer(preview) { qrCodes ->
             qrCodes.forEach {
-                it.boundingBox
-                when (it.valueType) {
-                    FirebaseVisionBarcode.TYPE_WIFI -> {
-                        it.let {
-                            val ssid = it.wifi!!.ssid!!
-                            val password = it.wifi!!.password!!
-                            val type = it.wifi!!.encryptionType!!
+                it.let {
+                    when (it.valueType) {
+                        FirebaseVisionBarcode.TYPE_WIFI -> {
+                            it.let {
+                                val ssid = it.wifi!!.ssid!!
+                                val password = it.wifi!!.password!!
+                                val type = it.wifi!!.encryptionType!!
 
-                            connectToWifi(ssid, password, type = type)
+                                connectToWifi(ssid, password, type = type)
+                            }
+
+                        }
+                        FirebaseVisionBarcode.TYPE_URL -> {
+                            val title = it.url?.title
+                            val url = it.url?.url
+                        }
+                        FirebaseVisionBarcode.TYPE_SMS -> {
+                        }
+                        FirebaseVisionBarcode.TYPE_TEXT -> {
+                        }
+                        else -> {
                         }
 
                     }
-                    FirebaseVisionBarcode.TYPE_URL -> {
-                        val title = it.url?.title
-                        val url = it.url?.url
-                    }
-                    FirebaseVisionBarcode.TYPE_SMS -> {
-                    }
-                    FirebaseVisionBarcode.TYPE_TEXT -> {
-                    }
-                    else -> {
-                    }
-
-                }
 //                Log.d("MainActivity", "QR Code detected: ${it.rawValue}.")
-                tv_result.text = it.rawValue
+                    tv_result.text = it.rawValue
+                    CameraX.unbind(preview)
+                }
+
             }
         }
 
@@ -114,6 +112,23 @@ class CameraXActivity : AppCompatActivity() {
         val selfPermission =
             ContextCompat.checkSelfPermission(baseContext, Manifest.permission.CAMERA)
         return selfPermission == PackageManager.PERMISSION_GRANTED
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        tv_result.text = null
+
+        // Request camera permissions
+        if (isCameraPermissionGranted()) {
+            textureView.post { startCamera() }
+        } else {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(Manifest.permission.CAMERA),
+                REQUEST_CAMERA_PERMISSION
+            )
+        }
     }
 
     override fun onRequestPermissionsResult(
@@ -192,8 +207,6 @@ class CameraXActivity : AppCompatActivity() {
         }
         return config
     }
-
-
 }
 //
 //    lateinit var textureView: TextureView

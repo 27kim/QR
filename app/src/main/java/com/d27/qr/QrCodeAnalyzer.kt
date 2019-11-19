@@ -1,7 +1,9 @@
 package com.d27.qr
 
+import androidx.camera.core.CameraX
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import androidx.camera.core.Preview
 import com.d27.qr.util.LLog
 import com.google.firebase.ml.vision.FirebaseVision
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
@@ -10,6 +12,7 @@ import com.google.firebase.ml.vision.common.FirebaseVisionImage
 import com.google.firebase.ml.vision.common.FirebaseVisionImageMetadata
 
 class QrCodeAnalyzer(
+    private val preview: Preview,
     private val onQrCodesDetected: (qrCodes: List<FirebaseVisionBarcode>) -> Unit
 ) : ImageAnalysis.Analyzer {
 
@@ -33,8 +36,10 @@ class QrCodeAnalyzer(
                 LLog.e("something went wrong : $it")
             }
             .addOnCompleteListener {
-                detector.close()
+//                detector.close()
 //                onQrCodesDetected(it)
+//                CameraX.unbind(preview)
+
             }
     }
 
