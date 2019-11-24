@@ -7,4 +7,5 @@
     <color name="color800">#424242</color>
     <color name="color900">#212121</color>
     <color name="transparent">@android:color/transparent </color>
+    <color name="white">#FFFFFF</color>
 </resources>

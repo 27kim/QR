@@ -1,43 +1,49 @@
 package com.d27.qr.view.splash
 
 import android.animation.Animator
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import com.d27.qr.CameraXActivity
-import com.d27.qr.R
-import com.d27.qr.MLKitActivity
-import com.d27.qr.ZXingActivity
+import android.widget.Toast
+import com.d27.qr.*
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_splash.*
 
 class SplashActivity : AppCompatActivity() {
+
+
+    lateinit var bottomNavigationView: BottomNavigationView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_splash)
 
-        lottie.apply {
-            setAnimation("7242-barcode-scanner.json")
-            playAnimation()
-            addAnimatorListener(object : Animator.AnimatorListener {
-                override fun onAnimationRepeat(p0: Animator?) {
-                }
 
-                override fun onAnimationEnd(p0: Animator?) {
-                }
 
-                override fun onAnimationCancel(p0: Animator?) {
-                }
+        bottomNavigationView = findViewById(R.id.bottom_navigation)
+        bottomNavigationView.setOnNavigationItemSelectedListener {
 
-                override fun onAnimationStart(p0: Animator?) {
+
+
+            when(it.itemId){
+                R.id.action_favorites -> {
+                    Toast.makeText(applicationContext, "favorite", Toast.LENGTH_SHORT).show()
+                    true
                 }
-            })
+                R.id.action_music -> {
+                    supportFragmentManager.beginTransaction().replace(R.id.container, ScanQrFragment.newInstance()).commit()
+                    Toast.makeText(applicationContext, "action_music", Toast.LENGTH_SHORT).show()
+
+                    true
+                }
+                R.id.action_schedules -> {
+                    Toast.makeText(applicationContext, "action_schedules", Toast.LENGTH_SHORT).show()
+
+                    true
+                }
+                else -> false
+            }
         }
 
-        btn1.setOnClickListener {
-            startActivity(CameraXActivity.start(applicationContext))
-        }
-        btn2.setOnClickListener {
-            startActivity(MLKitActivity.start(applicationContext))
-        }
     }
 }

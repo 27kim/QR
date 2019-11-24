@@ -37,6 +37,8 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_result"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
+        android:visibility="gone"
+        android:text="와이파이 연결"
         />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
