@@ -12,7 +12,6 @@ import kotlinx.android.synthetic.main.activity_scan_qr.view.*
 
 class ScanQrFragment : Fragment() {
 
-
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,

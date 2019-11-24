@@ -17,19 +17,27 @@ import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
 import kotlinx.android.synthetic.main.activity_camerax.*
 import android.net.wifi.WifiManager
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.d27.qr.util.LLog
+import kotlinx.android.synthetic.main.activity_camerax.view.*
 
 
-class CameraXActivity : AppCompatActivity() {
+class CameraXActivity : Fragment() {
     companion object {
         private const val REQUEST_CAMERA_PERMISSION = 10
 
         fun start(context: Context): Intent {
             return Intent(context, CameraXActivity::class.java)
         }
+
         private lateinit var preview: Preview
+
+        fun newInstance(): Fragment {
+            return CameraXActivity()
+        }
     }
 
     private val WIFICIPHER_NOPASS = "NOPASS"
@@ -41,18 +49,22 @@ class CameraXActivity : AppCompatActivity() {
     var password = ""
     var type = 0
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_camerax)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        val view = inflater.inflate(R.layout.activity_camerax, container, false)
 
-        textureView = findViewById(R.id.texture_view)
+        textureView = view.findViewById(R.id.texture_view)
 
-        btn_restart.visibility = View.VISIBLE
-        btn_restart.setOnClickListener {
-//            fuck()
+        view.btn_restart.visibility = View.VISIBLE
+        view.btn_restart.setOnClickListener {
+            //            fuck()
             connectToWifi(ssid, password, type)
         }
 
+        return view
     }
 
     private fun startCamera() {
@@ -79,9 +91,9 @@ class CameraXActivity : AppCompatActivity() {
                     when (it.valueType) {
                         FirebaseVisionBarcode.TYPE_WIFI -> {
                             it.let {
-                                 ssid = it.wifi!!.ssid!!
-                                 password = it.wifi!!.password!!
-                                 type = it.wifi!!.encryptionType!!
+                                ssid = it.wifi!!.ssid!!
+                                password = it.wifi!!.password!!
+                                type = it.wifi!!.encryptionType!!
                                 btn_restart.visibility = View.VISIBLE
                             }
 
@@ -115,7 +127,7 @@ class CameraXActivity : AppCompatActivity() {
 
     private fun isCameraPermissionGranted(): Boolean {
         val selfPermission =
-            ContextCompat.checkSelfPermission(baseContext, Manifest.permission.CAMERA)
+            ContextCompat.checkSelfPermission(context!!, Manifest.permission.CAMERA)
         return selfPermission == PackageManager.PERMISSION_GRANTED
     }
 
@@ -128,10 +140,8 @@ class CameraXActivity : AppCompatActivity() {
         if (isCameraPermissionGranted()) {
             textureView.post { startCamera() }
         } else {
-            ActivityCompat.requestPermissions(
-                this,
-                arrayOf(Manifest.permission.CAMERA),
-                REQUEST_CAMERA_PERMISSION
+            requestPermissions(
+                arrayOf(Manifest.permission.CAMERA), REQUEST_CAMERA_PERMISSION
             )
         }
     }
@@ -145,13 +155,14 @@ class CameraXActivity : AppCompatActivity() {
             if (isCameraPermissionGranted()) {
                 textureView.post { startCamera() }
             } else {
-                Toast.makeText(this, "Camera permission is required.", Toast.LENGTH_SHORT).show()
-                finish()
+                Toast.makeText(activity, "Camera permission is required.", Toast.LENGTH_SHORT)
+                    .show()
+                activity!!.finish()
             }
         }
     }
 
-    fun fuck(){
+    fun fuck() {
         val id = "sunny27_2.4"
         val pw = "1q2w3e4r%T"
 
@@ -171,7 +182,8 @@ class CameraXActivity : AppCompatActivity() {
         config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
         config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
 
-        val wifiManager: WifiManager = this.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
+        val wifiManager: WifiManager =
+            context!!.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
         val netId = wifiManager.addNetwork(config)
 
@@ -223,7 +235,8 @@ class CameraXActivity : AppCompatActivity() {
 
         try {
 
-            val wifiManager: WifiManager = this.getApplicationContext().getSystemService(Context.WIFI_SERVICE) as WifiManager
+            val wifiManager: WifiManager =
+                context!!.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
             val netId = wifiManager.addNetwork(config)
 

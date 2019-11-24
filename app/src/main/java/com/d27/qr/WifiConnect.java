@@ -44,10 +44,6 @@ public class WifiConnect extends AppCompatActivity {
 
             conf.preSharedKey = "\"" + networkPass + "\"";
 
-
-
-
-
             WifiManager wifiManager = (WifiManager) getApplicationContext().getSystemService(Context.WIFI_SERVICE);
             int networkId = wifiManager.addNetwork(conf);
 

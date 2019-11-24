@@ -6,7 +6,6 @@ import androidx.appcompat.app.AppCompatActivity
 import com.google.zxing.integration.android.IntentIntegrator
 import android.widget.Toast
 import android.content.Intent
-import com.d27.qr.view.MainActivity
 
 
 class ZXingActivity :AppCompatActivity(){

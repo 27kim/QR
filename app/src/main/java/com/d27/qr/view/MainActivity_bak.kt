@@ -10,15 +10,11 @@ import com.google.android.gms.vision.barcode.BarcodeDetector
 import kotlinx.android.synthetic.main.activity_main.*
 import com.google.android.gms.vision.Frame
 import android.graphics.BitmapFactory
-import android.widget.TextView
 
-
-
-
-class MainActivity : AppCompatActivity() {
+class MainActivity_bak : AppCompatActivity() {
     companion object {
         fun start(context: Context): Intent {
-            return Intent(context, MainActivity::class.java)
+            return Intent(context, MainActivity_bak::class.java)
         }
     }
     override fun onCreate(savedInstanceState: Bundle?) {

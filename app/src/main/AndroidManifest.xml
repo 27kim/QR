@@ -24,14 +24,14 @@
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
             android:value="barcode" />
 
-        <activity android:name=".view.splash.SplashActivity">
+        <activity android:name=".view.splash.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".view.MainActivity" />
+        <activity android:name=".view.MainActivity_bak" />
         <activity android:name=".MLKitActivity" />
         <activity android:name=".ZXingActivity" />
         <activity android:name=".CameraXActivity"/>
