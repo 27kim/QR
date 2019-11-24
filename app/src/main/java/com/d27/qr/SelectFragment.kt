@@ -1,23 +1,22 @@
 package com.d27.qr
 
 import android.animation.Animator
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import kotlinx.android.synthetic.main.activity_scan_qr.view.*
+import kotlinx.android.synthetic.main.activity_select.view.*
 
-class ScanQrFragment : Fragment() {
+class SelectFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.activity_scan_qr, container, false)
+        val view = inflater.inflate(R.layout.activity_select, container, false)
 
 
         view.lottie.apply {
@@ -45,15 +44,23 @@ class ScanQrFragment : Fragment() {
             startActivity(MLKitActivity.start(context!!))
         }
         view.btn3.setOnClickListener {
-            startActivity( Intent(context, WifiConnect::class.java))
+            startActivity(Intent(context, WifiConnect::class.java))
+        }
+        view.btn5.setOnClickListener {
+            startActivity(Intent(context, ZXingActivity::class.java))
+
+        }
+        view.btn6.setOnClickListener {
+            startActivity(Intent(context, MLKitActivity::class.java))
+
         }
 
         return view
     }
 
-    companion object{
-        fun newInstance() : Fragment{
-            return ScanQrFragment()
+    companion object {
+        fun newInstance(): Fragment {
+            return SelectFragment()
         }
     }
 }

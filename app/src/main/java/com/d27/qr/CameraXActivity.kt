@@ -26,24 +26,12 @@ import kotlinx.android.synthetic.main.activity_camerax.view.*
 
 
 class CameraXActivity : Fragment() {
-    companion object {
-        private const val REQUEST_CAMERA_PERMISSION = 10
-
-        fun start(context: Context): Intent {
-            return Intent(context, CameraXActivity::class.java)
-        }
-
-        private lateinit var preview: Preview
-
-        fun newInstance(): Fragment {
-            return CameraXActivity()
-        }
-    }
 
     private val WIFICIPHER_NOPASS = "NOPASS"
     private val WIFICIPHER_WEP = 3
     private val WIFICIPHER_WPA = 2
     private lateinit var textureView: TextureView
+    private lateinit var preview: Preview
 
     var ssid = ""
     var password = ""
@@ -245,143 +233,20 @@ class CameraXActivity : Fragment() {
             wifiManager.disconnect()
             wifiManager.enableNetwork(netId, true)
             wifiManager.reconnect()
-
-
-//            val wifiManager =
-//                this.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager
-//            wifiManager.addNetwork(config)
-//
-//            Log.d("after connecting", config.SSID + " " + config.preSharedKey)
-//
-//
-//            val list = wifiManager.configuredNetworks
-//            for (i in list) {
-//                if (i.SSID != null && i.SSID == "\"" + ssid + "\"") {
-//                    wifiManager.disconnect()
-//                    wifiManager.enableNetwork(i.networkId, true)
-//                    wifiManager.reconnect()
-//                    Log.d("re connecting", i.SSID + " " + config.preSharedKey)
-//
-//                    break
-//                }
-//            }
         } catch (e: Exception) {
             LLog.e(e.toString())
         }
     }
+
+    companion object {
+        private const val REQUEST_CAMERA_PERMISSION = 10
+
+        fun start(context: Context): Intent {
+            return Intent(context, CameraXActivity::class.java)
+        }
+
+        fun newInstance(): Fragment {
+            return CameraXActivity()
+        }
+    }
 }
-//
-//    lateinit var textureView: TextureView
-//
-//    override fun onCreate(savedInstanceState: Bundle?) {
-//        super.onCreate(savedInstanceState)
-//        setContentView(R.layout.activity_camerax)
-//        textureView = findViewById(R.id.texture_view)
-//
-//        if (allPermissionsGranted()) {
-//            textureView.post { startCamera() }
-//        } else {
-//            getRuntimePermissions()
-//        }
-//
-//
-//    }
-//
-//    private fun startCamera() {
-//        val previewConfig = PreviewConfig.Builder()
-//            .setLensFacing(CameraX.LensFacing.BACK)
-//            .build()
-//
-//        val preview = Preview(previewConfig)
-//
-//        preview.setOnPreviewOutputUpdateListener { previewOutPut ->
-//            textureView.surfaceTexture = previewOutPut.surfaceTexture
-//        }
-//
-//        val imageAnalysisConfig = ImageAnalysisConfig.Builder()
-//            .build()
-//        var imageAnalysis = ImageAnalysis(imageAnalysisConfig)
-//
-//        val qrCodeAnalyzer = QrCodeAnalyzer { qrCodes ->
-//            qrCodes.forEach {
-//                LLog.d("QR Code detected : ${it.rawValue}")
-//            }
-//        }
-//
-//        imageAnalysis.analyzer = qrCodeAnalyzer
-//
-////        CameraX.bindToLifecycle(this as LifecycleOwner, preview)
-//    }
-//
-//    private val requiredPermissions: Array<String?>
-//        get() {
-//            return try {
-//                val info = this.packageManager
-//                    .getPackageInfo(this.packageName, PackageManager.GET_PERMISSIONS)
-//                val ps = info.requestedPermissions
-//                if (ps != null && ps.isNotEmpty()) {
-//                    ps
-//                } else {
-//                    arrayOfNulls(0)
-//                }
-//            } catch (e: Exception) {
-//                arrayOfNulls(0)
-//            }
-//        }
-//
-//    private fun allPermissionsGranted(): Boolean {
-//        for (permission in requiredPermissions) {
-//            if (!CameraXActivity.isPermissionGranted(this, permission!!)) {
-//                return false
-//            }
-//        }
-//        return true
-//    }
-//
-//    private fun getRuntimePermissions() {
-//        val allNeededPermissions = arrayListOf<String>()
-//        for (permission in requiredPermissions) {
-//            if (!CameraXActivity.isPermissionGranted(this, permission!!)) {
-//                allNeededPermissions.add(permission)
-//            }
-//        }
-//
-//        if (allNeededPermissions.isNotEmpty()) {
-//            ActivityCompat.requestPermissions(
-//                this, allNeededPermissions.toTypedArray(), CameraXActivity.PERMISSION_REQUESTS
-//            )
-//        }
-//    }
-//
-//    override fun onRequestPermissionsResult(
-//        requestCode: Int,
-//        permissions: Array<String>,
-//        grantResults: IntArray
-//    ) {
-//        Log.i("TAG", "Permission granted!")
-//        if (allPermissionsGranted()) {
-//        }
-//        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-//    }
-//
-//    companion object {
-//        private const val PERMISSION_REQUESTS = 1
-//
-//        fun start(context: Context): Intent {
-//            return Intent(context, CameraXActivity::class.java)
-//        }
-//
-//        private fun isPermissionGranted(context: Context, permission: String): Boolean {
-//            if (ContextCompat.checkSelfPermission(
-//                    context,
-//                    permission
-//                ) == PackageManager.PERMISSION_GRANTED
-//            ) {
-//                Log.i("TAG", "Permission granted: $permission")
-//                return true
-//            }
-//            Log.i("TAG", "Permission NOT granted: $permission")
-//            return false
-//        }
-//    }
-//}

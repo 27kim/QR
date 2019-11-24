@@ -2,12 +2,10 @@ package com.d27.qr.view.splash
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.widget.Toast
 import com.d27.qr.*
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class MainActivity : AppCompatActivity() {
-
 
     private lateinit var bottomNavigationView: BottomNavigationView
 
@@ -16,7 +14,7 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_splash)
 
         supportFragmentManager.beginTransaction()
-            .replace(R.id.container, ScanQrFragment.newInstance()).commit()
+            .replace(R.id.container, SelectFragment.newInstance()).commit()
 
         bottomNavigationView = findViewById(R.id.bottom_navigation)
         bottomNavigationView.setOnNavigationItemSelectedListener {
@@ -42,6 +40,5 @@ class MainActivity : AppCompatActivity() {
                 else -> false
             }
         }
-
     }
 }
