@@ -9,9 +9,7 @@ import android.os.Bundle
 import android.util.Rational
 import android.view.TextureView
 import android.widget.Toast
-import androidx.appcompat.app.AppCompatActivity
 import androidx.camera.core.*
-import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import com.google.firebase.ml.vision.barcode.FirebaseVisionBarcode
@@ -46,9 +44,8 @@ class CameraXActivity : Fragment() {
 
         textureView = view.findViewById(R.id.texture_view)
 
-        view.btn_restart.visibility = View.VISIBLE
-        view.btn_restart.setOnClickListener {
-            //            fuck()
+        view.btn_connect_to_wifi.visibility = View.VISIBLE
+        view.btn_connect_to_wifi.setOnClickListener {
             connectToWifi(ssid, password, type)
         }
 
@@ -74,34 +71,30 @@ class CameraXActivity : Fragment() {
         val imageAnalysisConfig = ImageAnalysisConfig.Builder().build()
 
         val qrCodeAnalyzer = QrCodeAnalyzer(preview) { qrCodes ->
-            qrCodes.forEach {
-                it.let {
-                    when (it.valueType) {
-                        FirebaseVisionBarcode.TYPE_WIFI -> {
-                            it.let {
-                                ssid = it.wifi!!.ssid!!
-                                password = it.wifi!!.password!!
-                                type = it.wifi!!.encryptionType!!
-                                btn_restart.visibility = View.VISIBLE
-                            }
+            CameraX.unbindAll()
+            qrCodes[0].let {
+                tv_result.text = it.rawValue
+                when (it.valueType) {
+                    FirebaseVisionBarcode.TYPE_WIFI -> {
+                        it.let {
+                            ssid = it.wifi!!.ssid!!
+                            password = it.wifi!!.password!!
+                            type = it.wifi!!.encryptionType!!
+                            btn_connect_to_wifi.visibility = View.VISIBLE
+                        }
 
-                        }
-                        FirebaseVisionBarcode.TYPE_URL -> {
-                            val title = it.url?.title
-                            val url = it.url?.url
-                        }
-                        FirebaseVisionBarcode.TYPE_SMS -> {
-                        }
-                        FirebaseVisionBarcode.TYPE_TEXT -> {
-                        }
-                        else -> {
-                        }
                     }
-//                Log.d("MainActivity", "QR Code detected: ${it.rawValue}.")
-                    tv_result.text = it.rawValue
-                    CameraX.unbind(preview)
+                    FirebaseVisionBarcode.TYPE_URL -> {
+                        val title = it.url?.title
+                        val url = it.url?.url
+                    }
+                    FirebaseVisionBarcode.TYPE_SMS -> {
+                    }
+                    FirebaseVisionBarcode.TYPE_TEXT -> {
+                    }
+                    else -> {
+                    }
                 }
-
             }
         }
 
@@ -150,39 +143,7 @@ class CameraXActivity : Fragment() {
         }
     }
 
-    fun fuck() {
-        val id = "sunny27_2.4"
-        val pw = "1q2w3e4r%T"
-
-        val config = WifiConfiguration();
-        config.SSID = "\"" + id + "\""
-        config.preSharedKey = "\"" + pw + "\""
-        config.status = WifiConfiguration.Status.ENABLED
-        config.priority = 40
-
-        config.allowedProtocols.set(WifiConfiguration.Protocol.RSN)
-        config.allowedProtocols.set(WifiConfiguration.Protocol.WPA)
-        config.allowedKeyManagement.set(WifiConfiguration.KeyMgmt.WPA_PSK)
-        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.CCMP)
-        config.allowedPairwiseCiphers.set(WifiConfiguration.PairwiseCipher.TKIP)
-        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP40)
-        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.WEP104)
-        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.CCMP)
-        config.allowedGroupCiphers.set(WifiConfiguration.GroupCipher.TKIP)
-
-        val wifiManager: WifiManager =
-            context!!.getSystemService(Context.WIFI_SERVICE) as WifiManager
-
-        val netId = wifiManager.addNetwork(config)
-
-//        wifiManager.addNetwork(conf)
-
-        wifiManager.disconnect()
-        wifiManager.enableNetwork(netId, true)
-        wifiManager.reconnect()
-    }
-
-    fun connectToWifi(ssid: String, password: String, type: Int) {
+    private fun connectToWifi(ssid: String, password: String, type: Int) {
         val config = WifiConfiguration()
         config.allowedAuthAlgorithms.clear()
         config.allowedGroupCiphers.clear()
@@ -227,8 +188,6 @@ class CameraXActivity : Fragment() {
                 context!!.getSystemService(Context.WIFI_SERVICE) as WifiManager
 
             val netId = wifiManager.addNetwork(config)
-
-//        wifiManager.addNetwork(conf)
 
             wifiManager.disconnect()
             wifiManager.enableNetwork(netId, true)

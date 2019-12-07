@@ -29,16 +29,19 @@ class QrCodeAnalyzer(
 
         detector.detectInImage(visionImage)
             .addOnSuccessListener {
-                onQrCodesDetected(it)
+//                onQrCodesDetected(it)
 
             }
             .addOnFailureListener {
                 LLog.e("something went wrong : $it")
             }
             .addOnCompleteListener {
-//                detector.close()
-//                onQrCodesDetected(it)
-//                CameraX.unbind(preview)
+//                detectInImagector.close()
+                var resultlt = it.result
+                if(it.result?.size!! > 0) {
+                    onQrCodesDetected(it.result as List<FirebaseVisionBarcode>)
+                }
+//                cameraeraX.unbind(preview)
 
             }
     }
